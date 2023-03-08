@@ -12,8 +12,8 @@ class App extends Component {
     this.state = {
       beerArray : [],
       likedBeers: [],
-      isLiked: false,
-      text: 'Like this beer?'
+      isLiked: true,
+      buttonText: 'Like this beer?'
     };
   }
 
@@ -22,30 +22,35 @@ class App extends Component {
     .then(res => { 
       const { data } = res;
       const beerArray = data;
-      this.setState({beerArray})
-      console.log('beerArray', beerArray);
+      
+      this.setState({ beerArray : beerArray.map(beer => 
+        ({...beer,
+        isLiked: false,
+        buttonText: 'Like this beer?'
+      })
+      )
     })
+    })
+    
   }
 
-  handleClick(e, index) {
-    //looks through the beers to find the one the user clicks
-    const clickBeer = this.state.beerArray.filter((b, idx) => {
+  handleClick(index) {
+    //looks through the beers to find the one the user clicks (.find works more efficient in this case)
+    const clickBeer = this.state.beerArray.find((b, idx) => {
       if(idx === index) {
         return b
       }})
-      
-      const liked = this.state.isLiked === false ? true : false
-
     //adds the beer to the liked beers array
     this.setState({
       likedBeers: [...this.state.likedBeers, clickBeer],
-      isLiked: liked})
+      isLiked: !this.state.isLiked,
+      buttonText: !this.state.isLiked ? 'Like this beer?' : 'Liked'
+    })
+    
+    
+    BeerCard.buttonText = this.state.buttonText
     
       
-    if(!liked) {
-      this.state.text = 'Liked'
-    } else {this.state.text = 'Like this beer?'}
-    console.log(this.state.text)
   }
 
   render() {
@@ -63,8 +68,10 @@ class App extends Component {
               description={beer.description}
               image={beer.image_url}
               alt={beer.name}
-              onClick = {(e) => {this.handleClick(index)}}
-              value={this.state.text}
+              onClick = {() => {this.handleClick(index)}}
+              text={this.state.buttonText}
+              liked={beer.isLiked}
+              id={beer.id}
               />
             })}</ol>
             
