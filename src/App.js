@@ -33,23 +33,19 @@ class App extends Component {
     })
     
   }
-
-  handleClick(index) {
+  
+  handleClick(e, index) {
     //looks through the beers to find the one the user clicks (.find works more efficient in this case)
     const clickBeer = this.state.beerArray.find((b, idx) => {
       if(idx === index) {
         return b
       }})
-    //adds the beer to the liked beers array
-    this.setState({
-      likedBeers: [...this.state.likedBeers, clickBeer],
-      isLiked: !this.state.isLiked,
-      buttonText: !this.state.isLiked ? 'Like this beer?' : 'Liked'
-    })
-    
-    
-    BeerCard.buttonText = this.state.buttonText
-    
+      //adds the beer to the liked beers array
+      this.setState({
+        likedBeers: [...this.state.likedBeers, clickBeer],
+        isLiked: !this.state.isLiked,
+        buttonText: !this.state.isLiked ? 'Like this beer?' : 'Liked'
+      })
       
   }
 
@@ -68,7 +64,7 @@ class App extends Component {
               description={beer.description}
               image={beer.image_url}
               alt={beer.name}
-              onClick = {() => {this.handleClick(index)}}
+              onClick = {(e) => {this.handleClick(e, index)}}
               text={this.state.buttonText}
               liked={beer.isLiked}
               id={beer.id}
